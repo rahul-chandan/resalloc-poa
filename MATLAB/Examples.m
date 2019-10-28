@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   File: examples.m
+%   File: Examples.m
 %   Author: Rahul Chandan
 %
 %   Description:
