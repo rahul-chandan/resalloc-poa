@@ -1,5 +1,5 @@
 # MATLAB<sup>®</sup> and Python packages for local resource-allocation games
-## Author: Rahul Chandan
+## Author: Rahul Chandan, Dario Paccagnan and Jason Marden
 ## Email: <tt>rchandan</tt> at <tt>ucsb</tt> dot <tt>edu</tt>
 
 The MATLAB<sup>®</sup> and Python packages available here have been developed as companion code for our papers on local resource-allocation games (e.g., Optimal mechanisms for distributed resource-allocation). These packages are freely available, and are covered by the GNU Standard License, Version 3 (GPLv3). You are encouraged to download, develop and redistribute these packages, so long as you abide by the conditions of the license agreement.
