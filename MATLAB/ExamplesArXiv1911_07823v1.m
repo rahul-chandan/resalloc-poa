@@ -12,6 +12,7 @@
 clc
 clear
 close all
+addpath('code')
 
 %--------------------------- Setting the inputs --------------------------%
 % solver, positivity constraint
