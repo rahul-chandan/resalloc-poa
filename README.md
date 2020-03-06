@@ -1,4 +1,5 @@
-# Compute and optimize the price of anarchy (MATLAB<sup>®</sup> and Python)
+# Compute and optimize the price of anarchy  
+## (MATLAB<sup>®</sup> and Python)
 
 This repository contains MATLAB<sup>®</sup> and Python scripts to compute and optimize the price of anarchy (PoA) in atomic congestion games and their maximization version.
 See [wikipedia](https://en.wikipedia.org/wiki/Congestion_game) for congestion games and the price of anarchy.
@@ -6,7 +7,7 @@ See [wikipedia](https://en.wikipedia.org/wiki/Congestion_game) for congestion ga
 
 **How to use**  
 Matlab: clone or download; move to `resalloc-poa/Matlab`; run `ExampleGetStarted.m` to get started.  
-Python: clone or download; move to `resalloc-poa/Pyhon`;  run `Examples.py` to get started.
+Python: clone or download; move to `resalloc-poa/Python`;  run `Examples.py` to get started.
 
 
 **Requirements**  
