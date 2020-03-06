@@ -1,10 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   File: generateIR.m
 %   Author: Rahul Chandan
 %
 %   Description: 
-%   Generate the set `I_R` as defined in (15) of chandan2020when.
+%   Generate the set `\mathcal{I}_R` as defined in the manuscript
+%   "Utility Design for Distributed Resource Allocation -- Part I: 
+%    Characterizing and Optimizing the Exact Price of Anarchy" by
+%    Paccangnan, Chandan, Marden. See Arxiv 1807.01333 v3
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

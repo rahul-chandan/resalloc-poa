@@ -1,14 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   File: dualLP.m
 %   Author: Rahul Chandan
 %
 %   Description:
-%   Implementation of the linear program in Thm. 4, chandan2020when.
+%   Implementation of the linear program in ArXiv1911_07823v1 THM 4
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [x, fval, exitflag, output] = dualLP(n, w, f, costMinGame) 
+function [xval, fval, exitflag, output] = dualLP(n, w, f, costMinGame, platform) 
 
     [rowsW, colsW] = size(w);
     [rowsF, colsF] = size(f);
@@ -60,10 +59,26 @@ function [x, fval, exitflag, output] = dualLP(n, w, f, costMinGame)
         c = [0; 1];
     end
     
-    options = optimoptions('linprog','Algorithm','dual-simplex', ...
-        'Display','none');
+% different options to solve the LP
+    if strcmp(platform.name ,'YALMIP')
+        %-- solve the LP using YALMIP and solver of choice *recomended* --%
+        x = sdpvar(2,1);
+        objective = c'*x;
+        constraints = [A_ub*x <= B_ub'];
+        yalmip_options = platform.options;
 
-    [x, fval, exitflag, output] = linprog(c, A_ub, B_ub, [], [], ...
-        [], [], options);
-    
+        sol = optimize(constraints, objective, yalmip_options);
+
+        xval = value(x);
+        fval = value(objective);
+        exitflag = contains(sol.info, 'Successfully solved'); 
+        output.message = sol.info;
+        
+    elseif strcmp(platform.name, 'matlab-built-in')
+        %-- solve the LP using Matlab built-in solver *not recomended* ---%
+        options = platform.options;
+        [xval, fval, exitflag, output] = linprog(c, A_ub, B_ub, [], [], ...
+            [], [], options);
+    else error('wrong choice of platform')
+    end
 end
