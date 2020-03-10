@@ -52,6 +52,9 @@ if platform.solver == 1 % used only if matlab is selected
                                        'dual-simplex', 'Display','off',...
                                        'ConstraintTolerance', 1e-8,...
                                        'OptimalityTolerance', 1e-8);
+                                   
+   warning(sprintf('\nYou are using the matlab linprog solver.\nWe recommend YALMIP + your favorite LP solver for accuracy.\nTo use YALMIP, set platform.solver=0\n'));
+
 end
 
 if platform.solver == 0 % used only if YALMIP is selected
@@ -96,8 +99,7 @@ OptTau = Optf*OptPoA - B;
 
 
 %--------------------------------- Printing ------------------------------%
-fprintf('\n\nThe price of anarchy with n=%3i agents and polynomials of degree d=%1i is \n---> PoA=%5.2f', n, d, PoA)
+fprintf('The price of anarchy with n=%3i agents and polynomials of degree d=%1i is \n---> PoA=%5.2f', n, d, PoA)
 fprintf('\n\nThe *optimal* price of anarchy with n=%3i agents and polynomials of degree d=%1i is \n---> OptPoA=%5.2f\n\n', n, d, OptPoA)
 %-------------------------------------------------------------------------%
-
 

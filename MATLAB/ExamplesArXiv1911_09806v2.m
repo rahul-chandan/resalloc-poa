@@ -68,6 +68,8 @@ if platform.solver == 1 % used only if matlab is selected
                                        'dual-simplex', 'Display','off',...
                                        'ConstraintTolerance', 1e-8,...
                                        'OptimalityTolerance', 1e-8);
+    
+    warning(sprintf('\nYou are using the matlab linprog solver.\nWe recommend YALMIP + your favorite LP solver for accuracy.\nTo use YALMIP, set platform.solver=0\n'));
 end
 
 if platform.solver == 0 % used only if YALMIP is selected

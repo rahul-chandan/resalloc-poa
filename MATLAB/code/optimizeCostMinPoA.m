@@ -47,9 +47,12 @@ function [OptPoA, Optf] = optimizeCostMinPoA(n, B, platform)
         % to use Matlab built in LinProg with options
         platform.name = 'matlab-built-in'; 
         platform.options = platform.matlabOptions;
-        fprintf('\n')
-        warning(sprintf('\nYou are using the matlab linprog solver.\nWe recommend YALMIP + gurobi for accuracy.\nTo use YALMIP, set platform.solver=0\n'));
 
+        % if optimization toolbox not available, throw error                               
+        if license('test','optimization_toolbox')~=1
+            error('The optimization toolbox is not installed or licensed. Visit https://www.mathworks.com/products/optimization.html for more info.');
+        end
+        
 
     elseif platform.solver == 0
         % to use YALMIP with options

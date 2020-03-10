@@ -5,7 +5,7 @@ See [wikipedia](https://en.wikipedia.org/wiki/Congestion_game) for congestion ga
 
 
 **How to use**  
-Matlab: clone or download; move to `resalloc-poa/Matlab`; run `ExampleGetStarted.m` to get started.  
+Matlab: clone or download; move to `resalloc-poa/Matlab`; run `ExamplesGetStarted.m` to get started.  
 Python: clone or download; move to `resalloc-poa/Python`;  run `Examples.py` to get started.
 
 
