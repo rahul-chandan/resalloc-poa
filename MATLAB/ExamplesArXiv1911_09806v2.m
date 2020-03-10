@@ -1,5 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   Author: Dario Paccagnan
+%
+%   Authors: Rahul Chandan, Dario Paccagnan, Jason Marden
+%   Copyright (c) 2020 Rahul Chandan, Dario Paccagnan, Jason Marden. 
+%   All rights reserved. See LICENSE file in the project root for full license information.
+%
 %
 %   Supporting material for manuscript entitled 
 %       "Incentivizing efficient use of shared infrastructure: Optimal
@@ -26,7 +30,6 @@
 %   Name           Size        Description
 %	`n`            1x1 int     Number of players
 %	`d`            1x1 int     Highest degree of polynomial
-%   `positive`     1x1 bin     1 to enforce positivity of tolls, 0 else
 %
 %   `platform`     struct      Choice of solver and options
 %                             - platform.solver  
@@ -58,7 +61,6 @@ addpath('code')
 n = 100;             
 d = 6;               
 platform.solver = 1;
-positive = 1;
 
 % Set solver options
 if platform.solver == 1 % used only if matlab is selected 
@@ -69,10 +71,20 @@ if platform.solver == 1 % used only if matlab is selected
 end
 
 if platform.solver == 0 % used only if YALMIP is selected
+    % GUROBI
     platform.yalmipOptions = sdpsettings(...
                 'solver', 'gurobi','verbose', 0, 'cachesolvers', 1, ...
                 'gurobi.NumericFocus', 3, 'gurobi.OptimalityTol', 1e-9, ...
                 'gurobi.FeasibilityTol', 1e-9);
+
+%   INSTEAD OF GUROBI, use your FAVORITE SOLVER (e.g., SEDUMI, MOSEK, ...)
+%   % SEDUMI        
+%   platform.yalmipOptions = sdpsettings(...
+%                 'solver', 'sedumi','verbose', 0, 'cachesolvers', 1, ...
+%                 'sedumi.bigeps', 1e-6);  
+%   % MOSEK 
+%   platform.yalmipOptions = sdpsettings(...
+%                 'solver', 'mosek','verbose', 0, 'cachesolvers', 1);
 end                               
 %-------------------------------------------------------------------------%           
 
@@ -122,7 +134,7 @@ for current_d = 0 : d
     B = (1:n).^current_d/(n^2);                           
     
     % compute optimal toll for each basis x^j
-    current_OptPOA =  optimizeCostMinPoA(n, B, platform, positive);
+    current_OptPOA =  optimizeCostMinPoA(n, B, platform);
 
     
     % optimal poa is the largest over all bases
@@ -208,5 +220,5 @@ fprintf('\n')
 % Warning: Matlab solution is far from being accurate for d=6. Use YALMIP +
 % Gurobi, or any other reliable solver
 if platform.solver == 1
-    warning(sprintf('Matlab solution is far from being accurate for d=6\nUse YALMIP + Gurobi, or any other reliable solver\n'))
+    warning(sprintf('Matlab''s solution is far from being accurate for d=6\nUse YALMIP + Gurobi, or any other reliable solver\n'))
 end

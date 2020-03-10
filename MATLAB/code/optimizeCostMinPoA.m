@@ -1,6 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   Author: Rahul Chandan, Dario Paccagnan
+%   Authors: Rahul Chandan, Dario Paccagnan, Jason Marden
+%   Copyright (c) 2020 Rahul Chandan, Dario Paccagnan, Jason Marden. 
+%   All rights reserved. See LICENSE file in the project root for full license information.
 %
 %   Description:
 %   Optimizes the price-of-anarchy (by designing additive tolls) 
@@ -12,8 +14,6 @@
 %       `n`         1x1 int     Number of players.
 %       `B`         mxn real    Resource cost functions, each row 
 %                               corresponds to a basis in {b_1(x),...,b_m(x)}
-%
-%       `positive`  1x1 bin     1 to enforce positivity of tolls, 0 else
 %
 %       `platform`  struct      Choice of solver and options
 %
@@ -34,14 +34,13 @@
 %   Outputs:
 %       Name        Size        Description
 %       `OptPoA`    1x1 real    Optimal price-of-anarchy
-%       `Optf       mxn real    
-%        Optnu      mx1 real    Optf and Optnu can be used to costruct optimal
+%       `Optf       mxn real    Optf can be used to costruct optimal
 %                               tolls, see ArXiv:1911.09806v2. Each row
 %                               corresponds to a different basis
 %      
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [OptPoA, Optf, OptNu] = optimizeCostMinPoA(n, B, platform, positive)
+function [OptPoA, Optf] = optimizeCostMinPoA(n, B, platform)
 
     % Solver options
     if platform.solver == 1 
@@ -64,8 +63,7 @@ function [OptPoA, Optf, OptNu] = optimizeCostMinPoA(n, B, platform, positive)
     % Initialize
     m = size(B,1);
     OptPoA = 0;
-    Optf = zeros(m,n);
-    OptNu = zeros(m,1); 
+    Optf = zeros(m,n); 
     
     % For each basis compute the optimal tolling mechanism
     for current_basis = 1 : m
@@ -73,7 +71,7 @@ function [OptPoA, Optf, OptNu] = optimizeCostMinPoA(n, B, platform, positive)
         c = (1:n).*b;
     
         % Compute optimal toll for current basis 
-        [x, ~, exitflag, output] = optimalLP(n, [0 c 0]', 1, platform, positive);
+        [x, ~, exitflag, output] = optimalLP(n, [0 c 0]', 1, platform);
         
         if exitflag ~= 1
             error(output.message)
@@ -83,8 +81,6 @@ function [OptPoA, Optf, OptNu] = optimizeCostMinPoA(n, B, platform, positive)
         Optf(current_basis,:) = x(1:n); % Store the optimal mechanism
         currentOptPoA = 1/x(n+1);
         
-        if positive, OptNu(current_basis) = x(n+2); % to compute positive tolls
-        end
 
         % Optimal poa is the largest over all bases
         OptPoA = max( currentOptPoA, max(OptPoA) );

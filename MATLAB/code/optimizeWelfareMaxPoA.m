@@ -1,6 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   Authors: Rahul Chandan, Dario Paccagnan
+%   Authors: Rahul Chandan, Dario Paccagnan, Jason Marden
+%   Copyright (c) 2020 Rahul Chandan, Dario Paccagnan, Jason Marden. 
+%   All rights reserved. See LICENSE file in the project root for full license information.
 %
 %   Description:
 %   Optimizes price-of-anarchy for the maximization version of congestion 
@@ -12,8 +14,6 @@
 %       `n`         1x1 int     Number of players.
 %       `B`         mxn real    Resource cost functions, each row 
 %                               corresponds to a basis in {b_1(x),...,b_m(x)}
-%
-%       `positive`  1x1 bin     1 to enforce positivity of tolls, 0 else
 %
 %       `platform`  struct      Choice of solver and options
 %
@@ -39,7 +39,7 @@
 %      
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [OptPoA, Optf] = optimizeWelfareMaxPoA(n, B, platform, positive)
+function [OptPoA, Optf] = optimizeWelfareMaxPoA(n, B, platform)
 
     % Solver options
     if platform.solver == 1 
@@ -47,7 +47,7 @@ function [OptPoA, Optf] = optimizeWelfareMaxPoA(n, B, platform, positive)
         platform.name = 'matlab-built-in'; 
         platform.options = platform.matlabOptions;
         fprintf('\n')
-        warning(sprintf('\nYou are using the matlab linprog solver.\nWe recommend YALMIP + gurobi for accuracy.\nTo use YALMIP, set platform.solver=0\n'));
+        warning(sprintf('\nYou are using the matlab linprog solver.\nWe recommend YALMIP + your favorite solver for accuracy.\nTo use YALMIP, set platform.solver=0\n'));
 
 
     elseif platform.solver == 0
@@ -63,7 +63,6 @@ function [OptPoA, Optf] = optimizeWelfareMaxPoA(n, B, platform, positive)
     m = size(B,1);
     OptPoA = 0;
     Optf = zeros(m,n);
-    OptNu = zeros(m,1); 
     
     % For each basis compute the optimal tolling mechanism
     for current_basis = 1 : m
@@ -71,7 +70,7 @@ function [OptPoA, Optf] = optimizeWelfareMaxPoA(n, B, platform, positive)
         w = b;
     
         % Compute optimal toll for current basis 
-        [x, ~, exitflag, output] = optimalLP(n, [0 w 0]', 0, platform, positive);
+        [x, ~, exitflag, output] = optimalLP(n, [0 w 0]', 0, platform);
     
         
         if exitflag ~= 1
@@ -81,9 +80,7 @@ function [OptPoA, Optf] = optimizeWelfareMaxPoA(n, B, platform, positive)
         
         Optf(current_basis,:) = x(1:n); % Store the optimal mechanism
         currentOptPoA = x(n+1);
-        
-        if positive, OptNu(current_basis) = x(n+2);
-        end
+       
 
         % Optimal poa is the largest over all bases
         OptPoA = max( currentOptPoA, max(OptPoA) );

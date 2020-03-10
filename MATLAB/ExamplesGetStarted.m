@@ -1,12 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   Author: Dario Paccagnan
+%   Authors: Rahul Chandan, Dario Paccagnan, Jason Marden
+%   Copyright (c) 2020 Rahul Chandan, Dario Paccagnan, Jason Marden. 
+%   All rights reserved. See LICENSE file in the project root for full license information.
 %
 %       INPUTS:
 %       Variable    Size        Description
 %       `n`         1x1 int     Number of players
 %       `d`         1x1 int     Maximum degree of polynomial 
-%       `positive`  1x1 bin     1 to enforce positivity of tolls, 0 else
 %                               
 %       `platform`  struct      Choice of solver and options
 %
@@ -23,7 +24,7 @@
 %                             - platform.yalmipOptions sets solver options
 %                               for YALMIP (only if platform.solver = 0) 
 %                               Example: platform.yalmipOptions =
-%                                   sdpsettings('solver', 'gurobi's)
+%                                   sdpsettings('solver', 'gurobi')
 %
 %       OUTPUTS
 %       Variable    Size        Description
@@ -44,7 +45,6 @@ addpath('code')
 n = 50;             
 d = 1;               
 platform.solver = 1;
-positive = 1;
 
 % Set solver options
 if platform.solver == 1 % used only if matlab is selected 
@@ -55,10 +55,20 @@ if platform.solver == 1 % used only if matlab is selected
 end
 
 if platform.solver == 0 % used only if YALMIP is selected
+    % GUROBI
     platform.yalmipOptions = sdpsettings(...
                 'solver', 'gurobi','verbose', 0, 'cachesolvers', 1, ...
-                'gurobi.NumericFocus', 3, 'gurobi.OptimalityTol', 1e-9, ...
+               'gurobi.NumericFocus', 3, 'gurobi.OptimalityTol', 1e-9, ...
                 'gurobi.FeasibilityTol', 1e-9);
+
+%   INSTEAD OF GUROBI, use your FAVORITE SOLVER (e.g., SEDUMI, MOSEK, ...)
+%   % SEDUMI        
+%   platform.yalmipOptions = sdpsettings(...
+%                 'solver', 'sedumi','verbose', 0, 'cachesolvers', 1, ...
+%                 'sedumi.bigeps', 1e-6);  
+%   % MOSEK 
+%   platform.yalmipOptions = sdpsettings(...
+%                 'solver', 'mosek','verbose', 0, 'cachesolvers', 1);
 end                               
 %-------------------------------------------------------------------------%           
 
@@ -77,8 +87,10 @@ end
 PoA = computeCostMinPoA(n, B, B, platform); 
 
 % optimizes PoA
-OptPoA = optimizeCostMinPoA(n, B, platform, positive);
+[OptPoA, Optf] = optimizeCostMinPoA(n, B, platform);
 
+% non-negative tolls
+OptTau = Optf*OptPoA - B;
 %-------------------------------------------------------------------------%  
 
 

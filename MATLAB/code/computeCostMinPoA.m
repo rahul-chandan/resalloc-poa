@@ -1,6 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   Author: Rahul Chandan, Dario Paccagnan
+%   Authors: Rahul Chandan, Dario Paccagnan, Jason Marden
+%   Copyright (c) 2020 Rahul Chandan, Dario Paccagnan, Jason Marden. 
+%   All rights reserved. See LICENSE file in the project root for full license information.
 %
 %   Description:
 %   Computes the price-of-anarchy of polynomial congestion games with
@@ -44,7 +46,7 @@ function poa = computeCostMinPoA(n, B, f, platform)
         platform.name = 'matlab-built-in'; 
         platform.options = platform.matlabOptions;
         fprintf('\n')
-        warning(sprintf('You are using the matlab linprog solver.\nWe recommend YALMIP + gurobi for accuracy.\nTo use YALMIP, set platform.solver=0\n'));
+        warning(sprintf('\nYou are using the matlab linprog solver.\nWe recommend YALMIP + your favorite solver for accuracy.\nTo use YALMIP, set platform.solver=0\n'));
 
     elseif platform.solver == 0
         % to use YALMIP with options

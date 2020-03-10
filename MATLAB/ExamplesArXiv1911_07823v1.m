@@ -1,5 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   Author: Rahul Chandan
+%
+%   Authors: Rahul Chandan, Dario Paccagnan, Jason Marden
+%   Copyright (c) 2020 Rahul Chandan, Dario Paccagnan, Jason Marden. 
+%   All rights reserved. See LICENSE file in the project root for full license information.
+%
 %
 %   Supporting material for manuscript entitled 
 %   "Optimal mechanisms for distributed resource-allocation" 
@@ -12,12 +16,10 @@
 clc
 clear
 close all
-addpath('code')
 
 %--------------------------- Setting the inputs --------------------------%
-% solver, positivity constraint
+% solver
 platform.solver = 1;
-positive = 0; 
 
 % Set solver options
 if platform.solver == 1 % used only if matlab is selected 
@@ -28,10 +30,20 @@ if platform.solver == 1 % used only if matlab is selected
 end
 
 if platform.solver == 0 % used only if YALMIP is selected
+    % GUROBI
     platform.yalmipOptions = sdpsettings(...
                 'solver', 'gurobi','verbose', 0, 'cachesolvers', 1, ...
                 'gurobi.NumericFocus', 3, 'gurobi.OptimalityTol', 1e-9, ...
                 'gurobi.FeasibilityTol', 1e-9);
+
+%   INSTEAD OF GUROBI, use your FAVORITE SOLVER (e.g., SEDUMI, MOSEK, ...)
+%   % SEDUMI        
+%   platform.yalmipOptions = sdpsettings(...
+%                 'solver', 'sedumi','verbose', 0, 'cachesolvers', 1, ...
+%                 'sedumi.bigeps', 1e-6);  
+%   % MOSEK 
+%   platform.yalmipOptions = sdpsettings(...
+%                 'solver', 'mosek','verbose', 0, 'cachesolvers', 1);
 end                               
 %-------------------------------------------------------------------------%   
 
@@ -78,7 +90,7 @@ arrPoA = zeros(maxPlayers, maxEll);
 for ell = 1:maxEll
     for n = 1:maxPlayers
         w = min(1:n, ell);
-        arrPoA(n, ell) = optimizeWelfareMaxPoA(n, w, platform, positive);
+        arrPoA(n, ell) = optimizeWelfareMaxPoA(n, w, platform);
     end
 end
 
@@ -111,7 +123,7 @@ for idx = 1:res
     w = 1-q.^(1:n);
     f = w ./ (1:n);
     esPoA(idx) = computeWelfareMaxPoA(n, w, f, platform);
-    optPoA(idx) = optimizeWelfareMaxPoA(n, w, platform, positive);
+    optPoA(idx) = optimizeWelfareMaxPoA(n, w, platform);
 end
 
 figure

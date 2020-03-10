@@ -1,13 +1,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   Author: Rahul Chandan, Dario Paccagnan
+%   Authors: Rahul Chandan, Dario Paccagnan, Jason Marden
+%   Copyright (c) 2020 Rahul Chandan, Dario Paccagnan, Jason Marden. 
+%   All rights reserved. See LICENSE file in the project root for full license information.
 %
 %   Description: computes the optimal mechanism and the corresponding
 %   optimal price of anarchy
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [xval, fval, exitflag, output] = optimalLP(n, w, costMinGame, platform, positive)
+function [xval, fval, exitflag, output] = optimalLP(n, w, costMinGame, platform)
     [rowsW, colsW] = size(w);
     
     if rowsW < n+2
@@ -60,19 +62,6 @@ function [xval, fval, exitflag, output] = optimalLP(n, w, costMinGame, platform,
         c = c(end,:);
     end
     
-    if positive == 1
-        % need an extra decision variable
-        c = [c, 0];
-        A_ub = [A_ub,  zeros(size(A_ub, 1),1) ];
-        % add constraints
-        A_ub = [    A_ub       ;
-                 -eye(n), zeros(n,1), w(2:end-1)./(1:n)'];
-        B_ub = [    B_ub       ;
-                 zeros(n,1)     ];
-    elseif positive ~=0
-        error('Incorrect selection: the variable `positive` should be either 1 or 0');          
-    end
-
     % different options to solve the LP
     if strcmp(platform.name ,'YALMIP')
         %-- solve the LP using YALMIP and solver of choice *recomended* --%
