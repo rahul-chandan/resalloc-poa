@@ -1,8 +1,8 @@
 ####################################################################################################
 #
-#   File: dualPoA.py
-#   Author: Rahul Chandan
-#   Last updated: 2019/10/24
+#   Authors: Rahul Chandan, Dario Paccagnan, Jason Marden
+#   Copyright (c) 2020 Rahul Chandan, Dario Paccagnan, Jason Marden. 
+#   All rights reserved. See LICENSE file in the project root for full license information.
 #
 ####################################################################################################
 

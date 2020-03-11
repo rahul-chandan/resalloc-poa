@@ -1,8 +1,8 @@
 ####################################################################################################
 #
-#   File: Examples.py
-#   Author: Rahul Chandan
-#   Last updated: 2019/10/26
+#   Authors: Rahul Chandan, Dario Paccagnan, Jason Marden
+#   Copyright (c) 2020 Rahul Chandan, Dario Paccagnan, Jason Marden. 
+#   All rights reserved. See LICENSE file in the project root for full license information.
 #
 #   Description:
 #   The code for the illustrative examples in Section 6 of Chandan R, Paccagnan D, Marden JR (2019) 

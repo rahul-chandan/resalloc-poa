@@ -1,14 +1,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   File: optimalLP.m
-%   Author: Rahul Chandan
+%   Authors: Rahul Chandan, Dario Paccagnan, Jason Marden
+%   Copyright (c) 2020 Rahul Chandan, Dario Paccagnan, Jason Marden. 
+%   All rights reserved. See LICENSE file in the project root for full license information.
 %
-%   Description:
-%   
+%   Description: computes the optimal mechanism and the corresponding
+%   optimal price of anarchy
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [x, fval, exitflag, output] = optimalLP(n, w, costMinGame)
+function [xval, fval, exitflag, output] = optimalLP(n, w, costMinGame, platform)
     [rowsW, colsW] = size(w);
     
     if rowsW < n+2
@@ -60,10 +61,28 @@ function [x, fval, exitflag, output] = optimalLP(n, w, costMinGame)
     else
         c = c(end,:);
     end
-
-    options = optimoptions('linprog','Algorithm','dual-simplex', ...
-        'Display','none','OptimalityTolerance',1.0000e-07);
     
-    [x, fval, exitflag, output] = linprog(c, A_ub, B_ub, [], [], ...
+    % different options to solve the LP
+    if strcmp(platform.name ,'YALMIP')
+        %-- solve the LP using YALMIP and solver of choice *recomended* --%
+        x = sdpvar(length(c),1);
+        objective = c*x;
+        constraints = [A_ub*x <= B_ub];
+        yalmip_options = platform.options;
+
+        sol = optimize(constraints, objective, yalmip_options);
+
+        xval = value(x);
+        fval = value(objective);
+        exitflag = contains(sol.info, 'Successfully solved'); 
+        output.message = sol.info;
+        
+    elseif strcmp(platform.name, 'matlab-built-in')
+        %-- solve the LP using Matlab built-in solver *not recomended* ---%
+        options = platform.options;
+        [xval, fval, exitflag, output] = linprog(c, A_ub, B_ub, [], [], ...
         [], [], options);
+    
+    else error('Wrong choice of platform'); 
+    end 
 end
