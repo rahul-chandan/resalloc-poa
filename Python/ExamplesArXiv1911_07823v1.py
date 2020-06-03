@@ -12,7 +12,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from utilities import *
+from resallocPoA import *
 
 
 ####################################################################################################
@@ -29,8 +29,8 @@ for d in np.arange(1,maxOrder+1):
         # Define edge cost and cost-generating functions corresponding to number of players `n` and
         # polynomial order `d`, i.e., `B := \{ ( x^{d+1}, x^d ) \}`
 
-        c = np.tile(np.arange(1,n+1)**(d+1), (1,1)).T
-        f = np.tile(np.arange(1,n+1)**d, (1,1)).T
+        c = np.tile(np.arange(1,n+1)**(d+1), (1,1))
+        f = np.tile(np.arange(1,n+1)**d, (1,1))
         
         # Compute the price-of-anarchy of the specified congestion game
 
@@ -68,7 +68,7 @@ for ell in np.arange(1,maxEll+1):
         # Compute the optimal price-of-anarchy, and optimal utility-allocation function for the
         # specified ell-coverage game
 
-        optPoA, optF = optimizeWelfareMaxPoA(n, w)
+        optPoA, optF = optimizeWelfareMaxPoA(n, np.tile(w, (1,1)))
         arrPoA[n-1,ell-1] = optPoA
 
 fig, ax = plt.subplots()
@@ -107,13 +107,13 @@ for idx in np.arange(res):
     # is used. This corresponds to the optimal robust price-of-anarchy
 
     esPoAArr[idx] = computeWelfareMaxPoA( n, 
-                                          np.tile(w, (1,1)).T, 
-                                          np.tile(f, (1,1)).T )
+                                          np.tile(w, (1,1)), 
+                                          np.tile(f, (1,1)) )
 
     # Compute the optimal price-of-anarchy, and optimal utility-allocation function, for the
     # specified probabilistic-objective game
 
-    optPoA, optF = optimizeWelfareMaxPoA(n, w)
+    optPoA, optF = optimizeWelfareMaxPoA(n, np.tile(w, (1,1)))
 
     optPoAArr[idx] = optPoA
 
